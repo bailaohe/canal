@@ -1,23 +1,5 @@
 package com.alibaba.otter.canal.parse.inbound.mysql.tsdb;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-
 import com.alibaba.druid.sql.repository.Schema;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -35,6 +17,23 @@ import com.alibaba.otter.canal.parse.inbound.mysql.tsdb.dao.MetaHistoryDO;
 import com.alibaba.otter.canal.parse.inbound.mysql.tsdb.dao.MetaSnapshotDAO;
 import com.alibaba.otter.canal.parse.inbound.mysql.tsdb.dao.MetaSnapshotDO;
 import com.alibaba.otter.canal.protocol.position.EntryPosition;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * 基于db远程管理 see internal class: CanalTableMeta , ConsoleTableMetaTSDB
@@ -443,12 +442,13 @@ public class DatabaseTableMeta implements TableMetaTSDB {
                 return false;
             }
 
-            // mysql会有一种处理,针对show create只有uk没有pk时，会在desc默认将uk当做pk
-            boolean isSourcePkOrUk = sourceField.isKey() || sourceField.isUnique();
-            boolean isTargetPkOrUk = targetField.isKey() || targetField.isUnique();
-            if (isSourcePkOrUk != isTargetPkOrUk) {
-                return false;
-            }
+            // baihe: 目前canal在处理联合UK索引时，field的meta数据会出现问题
+//            // mysql会有一种处理,针对show create只有uk没有pk时，会在desc默认将uk当做pk
+//            boolean isSourcePkOrUk = sourceField.isKey() || sourceField.isUnique();
+//            boolean isTargetPkOrUk = targetField.isKey() || targetField.isUnique();
+//            if (isSourcePkOrUk != isTargetPkOrUk) {
+//                return false;
+//            }
         }
 
         return true;
