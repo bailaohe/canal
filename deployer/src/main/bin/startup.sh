@@ -1,11 +1,7 @@
 #!/bin/bash
 
 profile=dev
-consul_host=10.25.5.179
-if [[ $# -gt 0 ]]; then
-    profile=$1
-    consul_host=10.0.0.8
-fi
+consul_host=10.0.0.8
 
 current_path=`pwd`
 case "`uname`" in
@@ -27,7 +23,7 @@ if [ -f $base/bin/canal.pid ] ; then
     exit 1
 fi
 
-if [ ! -d $base/logs/canal ] ; then 
+if [ ! -d $base/logs/canal ] ; then
 	mkdir -p $base/logs/canal
 fi
 
@@ -49,25 +45,36 @@ if [ -z "$JAVA" ]; then
   fi
 fi
 
-case "$#" 
+case "$#"
 in
-0 ) 
+0 )
 	;;
-1 )	
-	var=$*
-	if [ -f $var ] ; then 
+1 )
+	profile=$1
+	;;
+2 )
+	profile=$1
+	consul_host=$2
+	;;
+3 )
+	profile=$1
+	consul_host=$2
+	var=$3
+	if [ -f $var ] ; then
 		canal_conf=$var
 	else
 		echo "THE PARAMETER IS NOT CORRECT.PLEASE CHECK AGAIN."
         exit
 	fi;;
-2 )	
-	var=$1
+4 )
+	profile=$1
+	consul_host=$2
+	var=$3
 	if [ -f $var ] ; then
 		canal_conf=$var
-	else 
+	else
 		if [ "$1" = "debug" ]; then
-			DEBUG_PORT=$2
+			DEBUG_PORT=$4
 			DEBUG_SUSPEND="n"
 			JAVA_DEBUG_OPT="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=$DEBUG_PORT,server=y,suspend=$DEBUG_SUSPEND"
 		fi
@@ -88,24 +95,24 @@ JAVA_OPTS=" $JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true 
 CANAL_OPTS="-DappName=otter-canal -Dlogback.configurationFile=$logback_configurationFile -Dcanal.conf=$canal_conf -Dcanal.instance.consul.host=$consul_host -Dcanal.instance.consul.app.profile=$profile"
 
 if [ -e $canal_conf -a -e $logback_configurationFile ]
-then 
-	
+then
+
 	for i in $base/lib/*;
 		do CLASSPATH=$i:"$CLASSPATH";
 	done
  	CLASSPATH="$base/conf:$CLASSPATH";
- 	
+
  	echo "cd to $bin_abs_path for workaround relative path"
   	cd $bin_abs_path
- 	
+
 	echo LOG CONFIGURATION : $logback_configurationFile
-	echo canal conf : $canal_conf 
+	echo canal conf : $canal_conf
 	echo CLASSPATH :$CLASSPATH
 	$JAVA $JAVA_OPTS $JAVA_DEBUG_OPT $CANAL_OPTS -classpath .:$CLASSPATH com.alibaba.otter.canal.deployer.CanalLauncher 1>>$base/logs/canal/canal.log 2>&1 &
-	echo $! > $base/bin/canal.pid 
-	
+	echo $! > $base/bin/canal.pid
+
 	echo "cd to $current_path for continue"
   	cd $current_path
-else 
+else
 	echo "canal conf("$canal_conf") OR log configration file($logback_configurationFile) is not exist,please create then first!"
 fi
