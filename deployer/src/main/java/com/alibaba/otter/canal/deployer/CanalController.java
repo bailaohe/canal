@@ -280,6 +280,10 @@ public class CanalController {
             globalConfig.setSpringXml(springXml);
         }
 
+        final String consulHost = getProperty(properties, CanalConstants.CANAL_CONSUL_HOST);
+        final String consulToken = getProperty(properties, CanalConstants.CANAL_CONSUL_TOKEN);
+        final String consulAppName = getProperty(properties, CanalConstants.CANAL_CONSUL_APP_NAME);
+
         instanceGenerator = new CanalInstanceGenerator() {
 
             public CanalInstance generate(String destination) {
@@ -298,6 +302,9 @@ public class CanalController {
                         try {
                             // 设置当前正在加载的通道，加载spring查找文件时会用到该变量
                             System.setProperty(CanalConstants.CANAL_DESTINATION_PROPERTY, destination);
+                            System.setProperty(CanalConstants.CANAL_CONSUL_HOST, consulHost);
+                            System.setProperty(CanalConstants.CANAL_CONSUL_TOKEN, consulToken);
+                            System.setProperty(CanalConstants.CANAL_CONSUL_APP_NAME, consulAppName);
                             instanceGenerator.setBeanFactory(getBeanFactory(config.getSpringXml()));
                             return instanceGenerator.generate(destination);
                         } catch (Throwable e) {

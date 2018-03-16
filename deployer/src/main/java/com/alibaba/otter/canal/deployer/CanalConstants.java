@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 /**
  * 启动常用变量
- * 
+ *
  * @author jianghang 2012-11-8 下午03:15:55
  * @version 1.0.0
  */
@@ -31,6 +31,10 @@ public class CanalConstants {
     public static final String INSTANCE_SPRING_XML_TEMPLATE      = ROOT + "." + "instance.{0}.spring.xml";
 
     public static final String CANAL_DESTINATION_PROPERTY        = ROOT + ".instance.destination";
+
+    public static final String CANAL_CONSUL_HOST                 = ROOT + ".instance.consul.host";
+    public static final String CANAL_CONSUL_TOKEN                = ROOT + ".instance.consul.token";
+    public static final String CANAL_CONSUL_APP_NAME             = ROOT + ".instance.consul.app.name";
 
     public static String getInstanceModeKey(String destination) {
         return MessageFormat.format(INSTANCE_MODE_TEMPLATE, destination);
