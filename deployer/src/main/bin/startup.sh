@@ -1,4 +1,11 @@
-#!/bin/bash 
+#!/bin/bash
+
+profile=dev
+consul_host=10.25.5.179
+if [[ $# -gt 0 ]]; then
+    profile=$1
+    consul_host=10.0.0.8
+fi
 
 current_path=`pwd`
 case "`uname`" in
@@ -78,7 +85,7 @@ else
 fi
 
 JAVA_OPTS=" $JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
-CANAL_OPTS="-DappName=otter-canal -Dlogback.configurationFile=$logback_configurationFile -Dcanal.conf=$canal_conf"
+CANAL_OPTS="-DappName=otter-canal -Dlogback.configurationFile=$logback_configurationFile -Dcanal.conf=$canal_conf -Dcanal.instance.consul.host=$consul_host -Dcanal.instance.consul.app.profile=$profile"
 
 if [ -e $canal_conf -a -e $logback_configurationFile ]
 then 

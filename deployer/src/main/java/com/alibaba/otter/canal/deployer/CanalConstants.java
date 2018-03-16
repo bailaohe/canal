@@ -35,6 +35,7 @@ public class CanalConstants {
     public static final String CANAL_CONSUL_HOST                 = ROOT + ".instance.consul.host";
     public static final String CANAL_CONSUL_TOKEN                = ROOT + ".instance.consul.token";
     public static final String CANAL_CONSUL_APP_NAME             = ROOT + ".instance.consul.app.name";
+    public static final String CANAL_CONSUL_APP_PROFILE          = ROOT + ".instance.consul.app.profile";
 
     public static String getInstanceModeKey(String destination) {
         return MessageFormat.format(INSTANCE_MODE_TEMPLATE, destination);

@@ -280,9 +280,10 @@ public class CanalController {
             globalConfig.setSpringXml(springXml);
         }
 
-        final String consulHost = getProperty(properties, CanalConstants.CANAL_CONSUL_HOST);
-        final String consulToken = getProperty(properties, CanalConstants.CANAL_CONSUL_TOKEN);
-        final String consulAppName = getProperty(properties, CanalConstants.CANAL_CONSUL_APP_NAME);
+        final String consulHost = System.getProperty(CanalConstants.CANAL_CONSUL_HOST, getProperty(properties, CanalConstants.CANAL_CONSUL_HOST));
+        final String consulToken = System.getProperty(CanalConstants.CANAL_CONSUL_TOKEN, getProperty(properties, CanalConstants.CANAL_CONSUL_TOKEN));
+        final String consulAppName = System.getProperty(CanalConstants.CANAL_CONSUL_APP_NAME, getProperty(properties, CanalConstants.CANAL_CONSUL_APP_NAME));
+        final String consulAppProfile = System.getProperty(CanalConstants.CANAL_CONSUL_APP_PROFILE, getProperty(properties, CanalConstants.CANAL_CONSUL_APP_PROFILE));
 
         instanceGenerator = new CanalInstanceGenerator() {
 
@@ -305,6 +306,7 @@ public class CanalController {
                             System.setProperty(CanalConstants.CANAL_CONSUL_HOST, consulHost);
                             System.setProperty(CanalConstants.CANAL_CONSUL_TOKEN, consulToken);
                             System.setProperty(CanalConstants.CANAL_CONSUL_APP_NAME, consulAppName);
+                            System.setProperty(CanalConstants.CANAL_CONSUL_APP_PROFILE, consulAppProfile);
                             instanceGenerator.setBeanFactory(getBeanFactory(config.getSpringXml()));
                             return instanceGenerator.generate(destination);
                         } catch (Throwable e) {
